@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stranger Things - The Game</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a0a0f 50%, #0f0a1a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    position: relative;
+}
+
+.title-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background:
+        radial-gradient(ellipse at center, rgba(255, 0, 0, 0.1) 0%, transparent 70%),
+        radial-gradient(ellipse at 20% 80%, rgba(0, 100, 255, 0.1) 0%, transparent 50%);
+    animation: backgroundPulse 4s infinite;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% { filter: brightness(0.8); }
+    50% { filter: brightness(1.2); }
+}
+
+.neon-title h1 {
+    font-size: 4rem;
+    color: #ff0040;
+    text-shadow:
+        0 0 10px #ff0040,
+        0 0 20px #ff0040,
+        0 0 30px #ff0040,
+        0 0 40px #ff0040,
+        0 0 70px #ff0040,
+        0 0 80px #ff0040,
+        0 0 100px #ff0040;
+    animation: flicker 3s infinite;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.neon-title h2 {
+    font-size: 1.5rem;
+    color: #00d4ff;
+    text-shadow:
+        0 0 10px #00d4ff,
+        0 0 20px #00d4ff,
+        0 0 30px #00d4ff;
+    text-align: center;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+        text-shadow:
+            0 0 10px #ff0040,
+            0 0 20px #ff0040,
+            0 0 30px #ff0040,
+            0 0 40px #ff0040,
+            0 0 70px #ff0040,
+            0 0 80px #ff0040,
+            0 0 100px #ff0040;
+    }
+    20%, 24%, 55% {
+        opacity: 0.4;
+        text-shadow: none;
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow:
+            0 0 10px #00d4ff,
+            0 0 20px #00d4ff,
+            0 0 30px #00d4ff;
+    }
+    to {
+        text-shadow:
+            0 0 20px #00d4ff,
+            0 0 30px #00d4ff,
+            0 0 40px #00d4ff,
+            0 0 50px #00d4ff;
+    }
+}
+
+.start-info {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.start-info .blink {
+    font-size: 1.2rem;
+    color: #ffff00;
+    animation: blink 1s infinite;
+    margin-bottom: 40px;
+}
+
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0; }
+}
+
+.controls-info {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 2;
+}
+
+.game-screen {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hud {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 40px;
+    font-size: 0.9rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    z-index: 100;
+}
+
+#gameCanvas {
+    border: 3px solid #ff0040;
+    box-shadow:
+        0 0 20px #ff0040,
+        inset 0 0 20px rgba(255, 0, 64, 0.2);
+    background: linear-gradient(180deg, #0a0a1a 0%, #1a0a0f 100%);
+}
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border: 3px solid #ff0040;
+    box-shadow:
+        0 0 30px #ff0040,
+        inset 0 0 20px rgba(255, 0, 64, 0.3);
+    z-index: 200;
+}
+
+.neon-text {
+    font-size: 2.5rem;
+    color: #ff0040;
+    text-shadow:
+        0 0 10px #ff0040,
+        0 0 20px #ff0040,
+        0 0 30px #ff0040;
+    margin-bottom: 20px;
+}
+
+.game-over p {
+    font-size: 1rem;
+    color: #fff;
+    margin: 15px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .neon-title h1 {
+        font-size: 2rem;
+    }
+
+    .neon-title h2 {
+        font-size: 0.9rem;
+    }
+
+    .start-info .blink {
+        font-size: 0.8rem;
+    }
+
+    .controls-info {
+        font-size: 0.6rem;
+    }
+
+    .hud {
+        font-size: 0.6rem;
+        padding: 0 10px;
+    }
+
+    .neon-text {
+        font-size: 1.5rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="title-screen" id="titleScreen">
+            <div class="neon-title">
+                <h1>STRANGER THINGS</h1>
+                <h2>THE UPSIDE DOWN ADVENTURE</h2>
+            </div>
+            <div class="start-info">
+                <p class="blink">PRESS SPACE TO START</p>
+                <div class="controls-info">
+                    <p>← → MOVE</p>
+                    <p>SPACE JUMP</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-screen hidden" id="gameScreen">
+            <div class="hud">
+                <div class="score">SCORE: <span id="score">0</span></div>
+                <div class="lives">LIVES: <span id="lives">3</span></div>
+                <div class="level">LEVEL: <span id="level">1</span></div>
+            </div>
+
+            <canvas id="gameCanvas"></canvas>
+
+            <div class="game-over hidden" id="gameOver">
+                <h2 class="neon-text">GAME OVER</h2>
+                <p>FINAL SCORE: <span id="finalScore">0</span></p>
+                <p class="blink">PRESS SPACE TO RESTART</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// Game State
+const GameState = {
+    TITLE: 'title',
+    PLAYING: 'playing',
+    GAME_OVER: 'gameOver'
+};
+
+let currentState = GameState.TITLE;
+let score = 0;
+let lives = 3;
+let level = 1;
+
+// Canvas Setup
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+
+// Set canvas size
+function resizeCanvas() {
+    if (canvas) {
+        canvas.width = Math.min(1000, window.innerWidth - 40);
+        canvas.height = Math.min(600, window.innerHeight - 200);
+    }
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Game Objects
+class Player {
+    constructor() {
+        this.width = 30;
+        this.height = 40;
+        this.x = 50;
+        this.y = canvas.height - this.height - 50;
+        this.velocityY = 0;
+        this.velocityX = 0;
+        this.speed = 5;
+        this.jumpPower = -15;
+        this.gravity = 0.6;
+        this.isJumping = false;
+        this.direction = 1;
+    }
+
+    update() {
+        this.velocityY += this.gravity;
+        this.y += this.velocityY;
+        this.x += this.velocityX;
+
+        if (this.y + this.height >= canvas.height - 50) {
+            this.y = canvas.height - this.height - 50;
+            this.velocityY = 0;
+            this.isJumping = false;
+        }
+
+        platforms.forEach(platform => {
+            if (this.checkCollision(platform)) {
+                if (this.velocityY > 0 && this.y + this.height - this.velocityY <= platform.y) {
+                    this.y = platform.y - this.height;
+                    this.velocityY = 0;
+                    this.isJumping = false;
+                }
+            }
+        });
+
+        if (this.x < 0) this.x = 0;
+        if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+    }
+
+    jump() {
+        if (!this.isJumping) {
+            this.velocityY = this.jumpPower;
+            this.isJumping = true;
+        }
+    }
+
+    checkCollision(obj) {
+        return this.x < obj.x + obj.width &&
+               this.x + this.width > obj.x &&
+               this.y < obj.y + obj.height &&
+               this.y + this.height > obj.y;
+    }
+
+    draw() {
+        ctx.fillStyle = '#ff69b4';
+        ctx.fillRect(this.x, this.y + 15, this.width, 25);
+
+        ctx.fillStyle = '#ffd4a3';
+        ctx.fillRect(this.x + 7, this.y, 16, 18);
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(this.x + 10, this.y + 6, 3, 3);
+        ctx.fillRect(this.x + 17, this.y + 6, 3, 3);
+
+        ctx.fillStyle = '#4169e1';
+        ctx.fillRect(this.x + 7, this.y + 32, 7, 8);
+        ctx.fillRect(this.x + 16, this.y + 32, 7, 8);
+
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00d4ff';
+        ctx.strokeStyle = '#00d4ff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.shadowBlur = 0;
+    }
+}
+
+class Platform {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    draw() {
+        ctx.fillStyle = '#2d1b2e';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        ctx.strokeStyle = '#ff0040';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = '#ff0040';
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.shadowBlur = 0;
+    }
+}
+
+class Enemy {
+    constructor(x, y) {
+        this.width = 35;
+        this.height = 45;
+        this.x = x;
+        this.y = y;
+        this.speed = 2;
+        this.direction = -1;
+        this.minX = x - 150;
+        this.maxX = x + 150;
+    }
+
+    update() {
+        this.x += this.speed * this.direction;
+
+        if (this.x <= this.minX || this.x >= this.maxX) {
+            this.direction *= -1;
+        }
+    }
+
+    draw() {
+        ctx.fillStyle = '#8b0000';
+        ctx.fillRect(this.x, this.y + 15, this.width, 30);
+
+        ctx.fillStyle = '#ff0000';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2, this.y + 10, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 6; i++) {
+            ctx.fillRect(this.x + 8 + i * 4, this.y + 6, 2, 8);
+        }
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(this.x + 8, this.y + 3, 4, 4);
+        ctx.fillRect(this.x + 23, this.y + 3, 4, 4);
+
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#ff0000';
+        ctx.strokeStyle = '#ff0000';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.shadowBlur = 0;
+    }
+}
+
+class Collectible {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 20;
+        this.height = 20;
+        this.collected = false;
+        this.angle = 0;
+    }
+
+    update() {
+        this.angle += 0.1;
+    }
+
+    draw() {
+        if (!this.collected) {
+            ctx.save();
+            ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+            ctx.rotate(this.angle);
+
+            ctx.fillStyle = '#f4d03f';
+            ctx.fillRect(-10, -10, 20, 20);
+
+            ctx.strokeStyle = '#8b6914';
+            ctx.lineWidth = 1;
+            for (let i = -10; i <= 10; i += 5) {
+                ctx.beginPath();
+                ctx.moveTo(i, -10);
+                ctx.lineTo(i, 10);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(-10, i);
+                ctx.lineTo(10, i);
+                ctx.stroke();
+            }
+
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#f4d03f';
+            ctx.strokeStyle = '#f4d03f';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-10, -10, 20, 20);
+            ctx.shadowBlur = 0;
+
+            ctx.restore();
+        }
+    }
+}
+
+let player;
+let platforms = [];
+let enemies = [];
+let collectibles = [];
+let keys = {};
+
+document.addEventListener('keydown', (e) => {
+    keys[e.code] = true;
+
+    if (currentState === GameState.TITLE && e.code === 'Space') {
+        startGame();
+    } else if (currentState === GameState.GAME_OVER && e.code === 'Space') {
+        resetGame();
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+});
+
+function handleInput() {
+    if (currentState !== GameState.PLAYING) return;
+
+    player.velocityX = 0;
+
+    if (keys['ArrowLeft']) {
+        player.velocityX = -player.speed;
+        player.direction = -1;
+    }
+    if (keys['ArrowRight']) {
+        player.velocityX = player.speed;
+        player.direction = 1;
+    }
+    if (keys['Space']) {
+        player.jump();
+    }
+}
+
+function initLevel() {
+    platforms = [];
+    enemies = [];
+    collectibles = [];
+
+    const platformCount = 5 + level;
+    const spacing = canvas.width / (platformCount + 1);
+
+    for (let i = 1; i <= platformCount; i++) {
+        const x = spacing * i - 50;
+        const y = canvas.height - 100 - Math.random() * 300;
+        const width = 80 + Math.random() * 40;
+        platforms.push(new Platform(x, y, width, 15));
+    }
+
+    const enemyCount = 2 + Math.floor(level / 2);
+    for (let i = 0; i < enemyCount; i++) {
+        const platformIndex = Math.floor(Math.random() * platforms.length);
+        const platform = platforms[platformIndex];
+        enemies.push(new Enemy(platform.x + 20, platform.y - 50));
+    }
+
+    const collectibleCount = 5 + level * 2;
+    for (let i = 0; i < collectibleCount; i++) {
+        const x = Math.random() * (canvas.width - 40) + 20;
+        const y = Math.random() * (canvas.height - 200) + 50;
+        collectibles.push(new Collectible(x, y));
+    }
+}
+
+function startGame() {
+    currentState = GameState.PLAYING;
+    document.getElementById('titleScreen').classList.add('hidden');
+    document.getElementById('gameScreen').classList.remove('hidden');
+
+    player = new Player();
+    initLevel();
+    gameLoop();
+}
+
+function resetGame() {
+    score = 0;
+    lives = 3;
+    level = 1;
+    updateHUD();
+    document.getElementById('gameOver').classList.add('hidden');
+    player = new Player();
+    initLevel();
+    currentState = GameState.PLAYING;
+}
+
+function gameOver() {
+    currentState = GameState.GAME_OVER;
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('gameOver').classList.remove('hidden');
+}
+
+function nextLevel() {
+    level++;
+    updateHUD();
+    player = new Player();
+    initLevel();
+}
+
+function updateHUD() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('lives').textContent = lives;
+    document.getElementById('level').textContent = level;
+}
+
+function checkCollisions() {
+    enemies.forEach(enemy => {
+        if (player.checkCollision(enemy)) {
+            if (player.velocityY > 0 && player.y + player.height - 10 < enemy.y + enemy.height / 2) {
+                const index = enemies.indexOf(enemy);
+                enemies.splice(index, 1);
+                score += 50;
+                player.velocityY = -10;
+            } else {
+                lives--;
+                if (lives <= 0) {
+                    gameOver();
+                } else {
+                    player.x = 50;
+                    player.y = canvas.height - player.height - 50;
+                    player.velocityY = 0;
+                }
+                updateHUD();
+            }
+        }
+    });
+
+    collectibles.forEach(collectible => {
+        if (!collectible.collected && player.checkCollision(collectible)) {
+            collectible.collected = true;
+            score += 10;
+            updateHUD();
+        }
+    });
+
+    const allCollected = collectibles.every(c => c.collected);
+    if (allCollected && collectibles.length > 0) {
+        score += 100 * level;
+        nextLevel();
+    }
+
+    if (player.y > canvas.height) {
+        lives--;
+        if (lives <= 0) {
+            gameOver();
+        } else {
+            player.x = 50;
+            player.y = canvas.height - player.height - 50;
+            player.velocityY = 0;
+        }
+        updateHUD();
+    }
+}
+
+function drawBackground() {
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const time = Date.now() * 0.001;
+    for (let i = 0; i < 20; i++) {
+        const x = (Math.sin(time * 0.5 + i) * 100 + canvas.width / 2 + i * 40) % canvas.width;
+        const y = (Math.cos(time * 0.3 + i) * 50 + 100 + i * 25) % canvas.height;
+
+        ctx.fillStyle = `rgba(255, 0, 64, ${0.1 + Math.sin(time + i) * 0.1})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.fillStyle = '#1a0a0f';
+    ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+
+    ctx.strokeStyle = '#ff0040';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height - 50);
+    ctx.lineTo(canvas.width, canvas.height - 50);
+    ctx.stroke();
+}
+
+function gameLoop() {
+    if (currentState !== GameState.PLAYING) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawBackground();
+    handleInput();
+
+    player.update();
+    enemies.forEach(enemy => enemy.update());
+    collectibles.forEach(collectible => collectible.update());
+
+    platforms.forEach(platform => platform.draw());
+    collectibles.forEach(collectible => collectible.draw());
+    enemies.forEach(enemy => enemy.draw());
+    player.draw();
+
+    checkCollisions();
+
+    requestAnimationFrame(gameLoop);
+}
+
+updateHUD();
+    </script>
+</body>
+</html>
