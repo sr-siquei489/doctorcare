@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stranger Things - The Game</title>
+    <link rel="stylesheet" href="./game-style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="title-screen" id="titleScreen">
+            <div class="neon-title">
+                <h1>STRANGER THINGS</h1>
+                <h2>THE UPSIDE DOWN ADVENTURE</h2>
+            </div>
+            <div class="start-info">
+                <p class="blink">PRESS SPACE TO START</p>
+                <div class="controls-info">
+                    <p>← → MOVE</p>
+                    <p>SPACE JUMP</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-screen hidden" id="gameScreen">
+            <div class="hud">
+                <div class="score">SCORE: <span id="score">0</span></div>
+                <div class="lives">LIVES: <span id="lives">3</span></div>
+                <div class="level">LEVEL: <span id="level">1</span></div>
+            </div>
+
+            <canvas id="gameCanvas"></canvas>
+
+            <div class="game-over hidden" id="gameOver">
+                <h2 class="neon-text">GAME OVER</h2>
+                <p>FINAL SCORE: <span id="finalScore">0</span></p>
+                <p class="blink">PRESS SPACE TO RESTART</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./game-script.js"></script>
+</body>
+</html>

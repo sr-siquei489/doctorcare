@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a0a0f 50%, #0f0a1a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    position: relative;
+}
+
+/* Title Screen */
+.title-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background:
+        radial-gradient(ellipse at center, rgba(255, 0, 0, 0.1) 0%, transparent 70%),
+        radial-gradient(ellipse at 20% 80%, rgba(0, 100, 255, 0.1) 0%, transparent 50%);
+    animation: backgroundPulse 4s infinite;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% { filter: brightness(0.8); }
+    50% { filter: brightness(1.2); }
+}
+
+.neon-title h1 {
+    font-size: 4rem;
+    color: #ff0040;
+    text-shadow:
+        0 0 10px #ff0040,
+        0 0 20px #ff0040,
+        0 0 30px #ff0040,
+        0 0 40px #ff0040,
+        0 0 70px #ff0040,
+        0 0 80px #ff0040,
+        0 0 100px #ff0040;
+    animation: flicker 3s infinite;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.neon-title h2 {
+    font-size: 1.5rem;
+    color: #00d4ff;
+    text-shadow:
+        0 0 10px #00d4ff,
+        0 0 20px #00d4ff,
+        0 0 30px #00d4ff;
+    text-align: center;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+        text-shadow:
+            0 0 10px #ff0040,
+            0 0 20px #ff0040,
+            0 0 30px #ff0040,
+            0 0 40px #ff0040,
+            0 0 70px #ff0040,
+            0 0 80px #ff0040,
+            0 0 100px #ff0040;
+    }
+    20%, 24%, 55% {
+        opacity: 0.4;
+        text-shadow: none;
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow:
+            0 0 10px #00d4ff,
+            0 0 20px #00d4ff,
+            0 0 30px #00d4ff;
+    }
+    to {
+        text-shadow:
+            0 0 20px #00d4ff,
+            0 0 30px #00d4ff,
+            0 0 40px #00d4ff,
+            0 0 50px #00d4ff;
+    }
+}
+
+.start-info {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.start-info .blink {
+    font-size: 1.2rem;
+    color: #ffff00;
+    animation: blink 1s infinite;
+    margin-bottom: 40px;
+}
+
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0; }
+}
+
+.controls-info {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 2;
+}
+
+/* Game Screen */
+.game-screen {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hud {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 40px;
+    font-size: 0.9rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    z-index: 100;
+}
+
+#gameCanvas {
+    border: 3px solid #ff0040;
+    box-shadow:
+        0 0 20px #ff0040,
+        inset 0 0 20px rgba(255, 0, 64, 0.2);
+    background: linear-gradient(180deg, #0a0a1a 0%, #1a0a0f 100%);
+}
+
+/* Game Over Screen */
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    border: 3px solid #ff0040;
+    box-shadow:
+        0 0 30px #ff0040,
+        inset 0 0 20px rgba(255, 0, 64, 0.3);
+    z-index: 200;
+}
+
+.neon-text {
+    font-size: 2.5rem;
+    color: #ff0040;
+    text-shadow:
+        0 0 10px #ff0040,
+        0 0 20px #ff0040,
+        0 0 30px #ff0040;
+    margin-bottom: 20px;
+}
+
+.game-over p {
+    font-size: 1rem;
+    color: #fff;
+    margin: 15px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .neon-title h1 {
+        font-size: 2rem;
+    }
+
+    .neon-title h2 {
+        font-size: 0.9rem;
+    }
+
+    .start-info .blink {
+        font-size: 0.8rem;
+    }
+
+    .controls-info {
+        font-size: 0.6rem;
+    }
+
+    .hud {
+        font-size: 0.6rem;
+        padding: 0 10px;
+    }
+
+    .neon-text {
+        font-size: 1.5rem;
+    }
+}
